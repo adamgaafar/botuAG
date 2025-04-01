@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import axios from 'axios';
 
 @Injectable()
 export class MonitoringService {
@@ -35,5 +36,25 @@ export class MonitoringService {
     return this.prisma.monitoring.delete({
       where: { id },
     });
+  }
+
+  async fetchPrometheusMetrics(query: string): Promise<any> {
+    const prometheusUrl = process.env.PROMETHEUS_URL;
+    if (!prometheusUrl) {
+      throw new HttpException('Prometheus URL is missing', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    const response = await axios.get(`${prometheusUrl}/api/v1/query`, {
+      params: { query },
+    });
+    return response.data;
+  }
+
+  async fetchGrafanaDashboard(dashboardId: string): Promise<any> {
+    const grafanaUrl = process.env.GRAFANA_URL;
+    if (!grafanaUrl) {
+      throw new HttpException('Grafana URL is missing', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    const response = await axios.get(`${grafanaUrl}/api/dashboards/${dashboardId}`);
+    return response.data;
   }
 }

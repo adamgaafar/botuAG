@@ -11,7 +11,7 @@ export class CloudController {
     @Body('credentials') credentials: any,
     @Body('regions') regions: any, // Accept 'regions' in the request body
   ) {
-    return this.cloudService.integrateCloud(provider, credentials, regions);
+    return this.cloudService.integrateCloud(provider, credentials, regions); // Pass 'regions' to the service
   }
 
   @Get('providers')

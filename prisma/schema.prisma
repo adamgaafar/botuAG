@@ -178,6 +178,7 @@ model CICDPipeline {
   projectId   String
   project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   name        String
+  config      String?  // Make this field optional
   status      String   @default("pending") // pending, running, completed
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

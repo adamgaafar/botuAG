@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import axios from 'axios';
 
 @Injectable()
 export class AIService {
@@ -8,5 +9,47 @@ export class AIService {
       success: true,
       optimizedParameters: { ...parameters, optimized: true },
     };
+  }
+
+  async generateIaCTemplate(requirements: string): Promise<string> {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new HttpException('OpenAI API key is missing', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    const response = await axios.post<{ choices: { text: string }[] }>(
+      'https://api.openai.com/v1/completions',
+      {
+        model: 'text-davinci-003',
+        prompt: `Generate Terraform code for the following requirements: ${requirements}`,
+        max_tokens: 1500,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      },
+    );
+    return response.data.choices[0].text;
+  }
+
+  async generatePipelineConfig(repositoryDetails: string): Promise<string> {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new HttpException('OpenAI API key is missing', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    const response = await axios.post<{ choices: { text: string }[] }>(
+      'https://api.openai.com/v1/completions',
+      {
+        model: 'text-davinci-003',
+        prompt: `Generate a CI/CD pipeline configuration for the following repository details: ${repositoryDetails}`,
+        max_tokens: 1500,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      },
+    );
+    return response.data.choices[0].text;
   }
 }

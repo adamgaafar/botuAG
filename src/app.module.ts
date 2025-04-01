@@ -15,6 +15,12 @@ import { JobController } from './job/job.controller';
 import { CloudRegionController } from './cloud-region/cloud-region.controller';
 import { CloudCredentialController } from './cloud-credential/cloud-credential.controller';
 import { MetricController } from './metric/metric.controller';
+import { AIService } from './ai/ai.service';
+import { CICDController } from './cicd/cicd.controller';
+import { CICDService } from './cicd/cicd.service';
+import { AIController } from './ai/ai.controller';
+import { CloudController } from './cloud/cloud.controller';
+import { CloudService } from './cloud/cloud.service';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), UserModule, PrismaModule],
@@ -25,6 +31,9 @@ import { MetricController } from './metric/metric.controller';
     CloudRegionController,
     CloudCredentialController,
     MetricController,
+    CICDController, // Add CICDController
+    AIController,   // Add AIController
+    CloudController, // Add CloudController
   ],
   providers: [
     AppService,
@@ -33,6 +42,9 @@ import { MetricController } from './metric/metric.controller';
     CloudRegionService,
     CloudCredentialService,
     MetricService,
+    CICDService, // Add CICDService
+    AIService,   // Add AIService
+    CloudService, // Add CloudService
   ],
 })
 export class AppModule {}

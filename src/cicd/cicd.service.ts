@@ -5,25 +5,19 @@ import { PrismaService } from '../prisma/prisma.service';
 export class CICDService {
   constructor(private prisma: PrismaService) {}
 
-  async createPipeline(projectId: string, name: string) {
+  async createPipeline(projectId: string, name: string, config?: string): Promise<any> {
     return this.prisma.cICDPipeline.create({
       data: {
         projectId,
         name,
+        ...(config && { config }), // Include 'config' only if it is defined
       },
     });
   }
 
-  async getPipelinesByProject(projectId: string) {
+  async getPipelinesByProject(projectId: string): Promise<any[]> {
     return this.prisma.cICDPipeline.findMany({
       where: { projectId },
-    });
-  }
-
-  async updatePipeline(id: string, status: string) {
-    return this.prisma.cICDPipeline.update({
-      where: { id },
-      data: { status },
     });
   }
 }
