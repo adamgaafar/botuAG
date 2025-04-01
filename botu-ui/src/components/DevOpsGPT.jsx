@@ -4,7 +4,13 @@ function DevOpsGPT() {
   return (
     <div>
       <h1>DevOps GPT</h1>
-      <p>Leverage AI-powered natural language commands for infrastructure and pipeline management.</p>
+      <form>
+        <label>
+          Command:
+          <input type="text" placeholder="Enter a natural language command..." />
+        </label>
+        <button type="submit">Execute</button>
+      </form>
     </div>
   );
 }

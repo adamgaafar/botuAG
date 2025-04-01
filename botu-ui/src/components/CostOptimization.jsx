@@ -4,7 +4,7 @@ function CostOptimization() {
   return (
     <div>
       <h1>Cost Optimization</h1>
-      <p>Optimize costs with AI-driven rightsizing, resource cleanup, and live cost dashboards.</p>
+      <p>Analyze and optimize costs here.</p>
     </div>
   );
 }

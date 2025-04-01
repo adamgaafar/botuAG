@@ -27,3 +27,88 @@ nav ul li a {
 nav ul li a:hover {
   background-color: #575757;
 }
+
+form {
+  margin: 20px 0;
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+form input, form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+form button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #575757;
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1e1e2f, #3a3a5f);
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.auth-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #00d4ff;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-container label {
+  margin-bottom: 5px;
+}
+
+.auth-container input,
+.auth-container select {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #2e2e4f;
+  color: white;
+}
+
+.auth-container button {
+  padding: 10px;
+  background-color: #00d4ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.auth-container button:hover {
+  background-color: #00a3cc;
+}
+
+.auth-container p {
+  text-align: center;
+}
+
+.error {
+  color: #ff4d4d;
+  text-align: center;
+}

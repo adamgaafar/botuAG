@@ -4,7 +4,13 @@ function Infrastructure() {
   return (
     <div>
       <h1>Infrastructure Management</h1>
-      <p>Manage and provision infrastructure with AI-generated templates and one-click multi-cloud deployment.</p>
+      <form>
+        <label>
+          Deployment Requirements:
+          <textarea placeholder="Enter requirements..." />
+        </label>
+        <button type="submit">Generate IaC</button>
+      </form>
     </div>
   );
 }

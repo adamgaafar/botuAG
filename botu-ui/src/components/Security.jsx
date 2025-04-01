@@ -4,7 +4,7 @@ function Security() {
   return (
     <div>
       <h1>Security & Compliance</h1>
-      <p>Continuous security scanning, automated threat blocking, and compliance enforcement.</p>
+      <p>Scan for vulnerabilities and enforce policies here.</p>
     </div>
   );
 }

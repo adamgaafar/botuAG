@@ -1,7 +1,12 @@
 import React from 'react';
 
 function Dashboard() {
-  return <h1>Welcome to the BOTU Platform Dashboard</h1>;
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <p>Welcome to the BOTU Platform. Use the navigation to explore features.</p>
+    </div>
+  );
 }
 
 export default Dashboard;

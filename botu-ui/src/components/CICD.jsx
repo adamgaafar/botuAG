@@ -4,7 +4,13 @@ function CICD() {
   return (
     <div>
       <h1>CI/CD Automation</h1>
-      <p>Automate CI/CD pipelines with AI-powered pipeline generation and predictive failure prevention.</p>
+      <form>
+        <label>
+          Repository URL:
+          <input type="text" placeholder="Enter repository URL..." />
+        </label>
+        <button type="submit">Generate Pipeline</button>
+      </form>
     </div>
   );
 }

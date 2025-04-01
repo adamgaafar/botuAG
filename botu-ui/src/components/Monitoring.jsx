@@ -4,7 +4,7 @@ function Monitoring() {
   return (
     <div>
       <h1>Monitoring & Observability</h1>
-      <p>Unified observability with AI-driven anomaly detection and auto-remediation playbooks.</p>
+      <p>View logs, metrics, and traces here.</p>
     </div>
   );
 }
