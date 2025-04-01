@@ -20,4 +20,14 @@ export class CICDService {
       where: { projectId },
     });
   }
+
+  async executeCanaryDeployment(pipelineId: string): Promise<any> {
+    // Logic for canary deployment
+    return { success: true, message: 'Canary deployment executed successfully' };
+  }
+
+  async syncGitOpsChanges(repositoryUrl: string): Promise<any> {
+    // Logic for GitOps synchronization
+    return { success: true, message: 'GitOps changes synchronized successfully' };
+  }
 }

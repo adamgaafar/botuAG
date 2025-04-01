@@ -1,5 +1,7 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudService } from './cloud.service';
+import { Multer } from 'multer'; // Import Multer types
 
 @Controller('cloud')
 export class CloudController {
@@ -17,5 +19,16 @@ export class CloudController {
   @Get('providers')
   async getProviders() {
     return this.cloudService.getCloudProviders();
+  }
+
+  @Post('deploy')
+  @UseInterceptors(FileInterceptor('file'))
+  async deploy(
+    @UploadedFile() file: Express.Multer.File, // Use Express.Multer.File type
+    @Body('repoLink') repoLink: string,
+    @Body('cloudProvider') cloudProvider: string,
+    @Body('requirements') requirements: string,
+  ) {
+    return this.cloudService.deploy(file, repoLink, cloudProvider, requirements);
   }
 }

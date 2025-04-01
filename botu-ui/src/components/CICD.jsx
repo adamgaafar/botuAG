@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { generatePipelineConfig } from '../api';
 
 function CICD() {
+  const [repositoryUrl, setRepositoryUrl] = useState('');
+  const [pipelineConfig, setPipelineConfig] = useState('');
+
+  const handleGeneratePipeline = async (e) => {
+    e.preventDefault();
+    const response = await generatePipelineConfig(repositoryUrl);
+    setPipelineConfig(response.data.config);
+  };
+
   return (
     <div>
       <h1>CI/CD Automation</h1>
-      <form>
+      <form onSubmit={handleGeneratePipeline}>
         <label>
           Repository URL:
-          <input type="text" placeholder="Enter repository URL..." />
+          <input
+            type="text"
+            value={repositoryUrl}
+            onChange={(e) => setRepositoryUrl(e.target.value)}
+            placeholder="Enter repository URL..."
+          />
         </label>
         <button type="submit">Generate Pipeline</button>
       </form>
+      {pipelineConfig && (
+        <div>
+          <h2>Generated Pipeline Configuration</h2>
+          <pre>{pipelineConfig}</pre>
+        </div>
+      )}
     </div>
   );
 }

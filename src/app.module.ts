@@ -21,6 +21,9 @@ import { CICDService } from './cicd/cicd.service';
 import { AIController } from './ai/ai.controller';
 import { CloudController } from './cloud/cloud.controller';
 import { CloudService } from './cloud/cloud.service';
+import { MonitoringService } from './monitoring/monitoring.service';
+import { NotificationsService } from './notifications/notifications.service';
+import { ResourceService } from './resource/resource.service';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), UserModule, PrismaModule],
@@ -45,6 +48,9 @@ import { CloudService } from './cloud/cloud.service';
     CICDService, // Add CICDService
     AIService,   // Add AIService
     CloudService, // Add CloudService
+    MonitoringService, // Add MonitoringService
+    NotificationsService, // Add NotificationsService
+    ResourceService, // Add ResourceService
   ],
 })
 export class AppModule {}

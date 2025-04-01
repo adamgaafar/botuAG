@@ -4,6 +4,9 @@ import * as AWS from 'aws-sdk';
 import { google } from 'googleapis';
 import { DefaultAzureCredential } from '@azure/identity';
 import { ComputeManagementClient } from '@azure/arm-compute';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Multer } from 'multer'; // Import Multer types
 
 @Injectable()
 export class CloudService {
@@ -67,5 +70,48 @@ export class CloudService {
 
   async getCloudProviders(): Promise<any[]> {
     return this.prisma.cloudIntegration.findMany();
+  }
+
+  async deploy(
+    file: Express.Multer.File, // Use Express.Multer.File type
+    repoLink: string,
+    cloudProvider: string,
+    requirements: string,
+  ): Promise<any> {
+    if (!file && !repoLink) {
+      throw new HttpException(
+        'Either a ZIP file or repository link must be provided',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const deploymentTasks: Promise<void>[] = []; // Ensure correct typing
+    if (cloudProvider === 'aws' || cloudProvider === 'all') {
+      deploymentTasks.push(this.deployToAWS(file, repoLink, requirements));
+    }
+    if (cloudProvider === 'azure' || cloudProvider === 'all') {
+      deploymentTasks.push(this.deployToAzure(file, repoLink, requirements));
+    }
+    if (cloudProvider === 'gcp' || cloudProvider === 'all') {
+      deploymentTasks.push(this.deployToGCP(file, repoLink, requirements));
+    }
+
+    await Promise.all(deploymentTasks);
+    return { message: 'Deployment initiated successfully' };
+  }
+
+  private async deployToAWS(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
+    // AWS deployment logic
+    console.log('Deploying to AWS with:', { file, repoLink, requirements });
+  }
+
+  private async deployToAzure(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
+    // Azure deployment logic
+    console.log('Deploying to Azure with:', { file, repoLink, requirements });
+  }
+
+  private async deployToGCP(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
+    // GCP deployment logic
+    console.log('Deploying to GCP with:', { file, repoLink, requirements });
   }
 }

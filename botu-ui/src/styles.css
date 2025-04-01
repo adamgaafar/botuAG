@@ -2,14 +2,30 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background: linear-gradient(135deg, #1e90ff, #87cefa); /* Cool blue background */
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
+
+nav {
+  background-color: #1e90ff; /* Blue navbar */
+  padding: 10px 20px;
+  position: fixed; /* Fix the navbar at the top */
+  top: 0; /* Align it to the top */
+  left: 0; /* Start from the left edge */
+  width: 100%; /* Span the full width */
+  z-index: 1000; /* Ensure it stays above other elements */
 }
 
 nav ul {
   list-style-type: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
   display: flex;
-  background-color: #333;
+  justify-content: space-around;
 }
 
 nav ul li {
@@ -20,12 +36,13 @@ nav ul li {
 nav ul li a {
   display: block;
   padding: 10px 20px;
-  color: white;
+  color: white; /* White text */
   text-decoration: none;
+  font-weight: bold;
 }
 
 nav ul li a:hover {
-  background-color: #575757;
+  text-decoration: underline;
 }
 
 form {
@@ -34,42 +51,42 @@ form {
 
 form label {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-align: left; /* Align label text to the start of the input field */
 }
 
-form input, form textarea {
+form input, form select, form textarea {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 form button {
   padding: 10px 20px;
-  background-color: #333;
+  background-color: #1e90ff;
   color: white;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 form button:hover {
-  background-color: #575757;
+  background-color: #005cbf;
 }
 
-.auth-container {
-  max-width: 400px;
-  margin: 50px auto;
+.auth-container, .dashboard-container {
   padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 8px;
-  background: linear-gradient(135deg, #1e1e2f, #3a3a5f);
-  color: white;
+  background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
-.auth-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #00d4ff;
+.auth-container h1, .dashboard-container h1 {
+  color: #1e90ff;
 }
 
 .auth-container form {
@@ -85,10 +102,8 @@ form button:hover {
 .auth-container select {
   padding: 10px;
   margin-bottom: 15px;
-  border: none;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #2e2e4f;
-  color: white;
 }
 
 .auth-container button {
@@ -106,9 +121,173 @@ form button:hover {
 
 .auth-container p {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .error {
   color: #ff4d4d;
   text-align: center;
+}
+
+.dashboard-container {
+  margin-top: 70px; /* Add margin to avoid overlap with the fixed navbar */
+  margin-bottom: 50px; /* Add margin to avoid overlap with the fixed footer */
+  width: 100vw; /* Take the full width of the viewport */
+  height: calc(100vh - 120px); /* Fill the space between navbar and footer */
+  padding: 20px; /* Add padding for better readability */
+  background: white; /* Ensure the background is white */
+  box-sizing: border-box; /* Include padding in the width and height calculation */
+  overflow-y: auto; /* Add scrolling if content overflows */
+  border-radius: 0; /* Remove border radius to make it span edge-to-edge */
+  box-shadow: none; /* Remove shadow for a flat design */
+  text-align: left; /* Align text to the left */
+}
+
+.dashboard-container header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-container .tagline {
+  font-style: italic;
+  color: #555;
+}
+
+.dashboard-container section {
+  margin-bottom: 30px;
+}
+
+.dashboard-container h3 {
+  color: #1e90ff;
+  margin-bottom: 10px;
+}
+
+.dashboard-container ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+.dashboard-container .features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-container .features-grid h4 {
+  color: #005cbf;
+  margin-bottom: 10px;
+}
+
+.dashboard-container .highlights {
+  list-style-type: none;
+  padding: 0;
+}
+
+.dashboard-container .highlights li {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.auth-container h1 {
+  color: #1e90ff;
+}
+
+footer {
+  background-color: #1e90ff;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0; /* Ensure the footer starts from the left edge */
+  width: 100%; /* Ensure the footer spans the full width */
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #1e90ff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hamburger menu styles for mobile view */
+.hamburger {
+  display: none; /* Hide by default */
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.hamburger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 4px 0;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-menu.mobile {
+  display: none; /* Hide menu by default in mobile view */
+  flex-direction: column;
+  background-color: #1e90ff;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+.nav-menu.mobile.show {
+  display: flex; /* Show menu when toggled */
+}
+
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  .auth-container, .dashboard-container {
+    width: 100%;
+  }
+
+  .hamburger {
+    display: flex; /* Show hamburger menu in mobile view */
+  }
+
+  .nav-menu {
+    display: none; /* Hide default menu in mobile view */
+  }
 }

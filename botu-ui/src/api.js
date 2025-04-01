@@ -11,4 +11,10 @@ export const fetchSecurity = () => api.get('/security');
 export const fetchCostOptimization = () => api.get('/cost-optimization');
 export const executeDevOpsGPT = (command) => api.post('/devops-gpt', { command });
 
+export const generateIaCTemplate = (requirements) =>
+  api.post('/ai/generate-iac', { requirements });
+
+export const generatePipelineConfig = (repositoryUrl) =>
+  api.post('/ai/generate-pipeline', { repositoryUrl });
+
 export default api;
