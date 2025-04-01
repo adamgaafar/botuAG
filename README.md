@@ -1,2 +1,0 @@
-# BotuAG
-adamgaafar botu platform

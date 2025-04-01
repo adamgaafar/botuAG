@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String // admin, user, devops
+  createdAt DateTime @default(now())
+
+  // Explicit relation name
+  ownedProjects Project[]    @relation("UserProjects")
+  permissions   Permission[]
+
+  @@index([email]) // Add index for email
+}
+
+model Project {
+  id             String           @id @default(uuid())
+  name           String
+  ownerId        String
+  owner          User             @relation(name: "UserProjects", fields: [ownerId], references: [id], onDelete: Cascade)
+  workflows      Workflow[]
+  pipelines      Pipeline[]
+  infrastructure Infrastructure[]
+  createdAt      DateTime         @default(now())
+  permissions    Permission[]
+  deployments    Deployment[]
+  cicdPipelines  CICDPipeline[]   // Add this relation field for CICDPipeline
+
+  @@index([ownerId]) // Add index for ownerId
+}
+
+model Workflow {
+  id             String           @id @default(uuid())
+  projectId      String
+  project        Project          @relation(fields: [projectId], references: [id])
+  name           String
+  status         String           @default("pending") // pending, running, completed
+  logs           Log[]
+  createdAt      DateTime         @default(now())
+  tasks          Task[]
+  aiOptimizations AIOptimization[] // Add this relation field for AIOptimization
+}
+
+model Pipeline {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  name      String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}
+
+model Infrastructure {
+  id         String   @id @default(uuid())
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id])
+  provider   String // AWS, GCP, Azure
+  resourceId String
+  status     String   @default("active")
+  createdAt  DateTime @default(now())
+}
+
+model Log {
+  id           String      @id @default(uuid())
+  workflowId   String?
+  workflow     Workflow?   @relation(fields: [workflowId], references: [id])
+  deploymentId String?
+  deployment   Deployment? @relation(fields: [deploymentId], references: [id])
+  message      String
+  logLevel     String      @default("info") // info, warning, error
+  createdAt    DateTime    @default(now())
+}
+
+model Permission {
+  id        String  @id @default(uuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+  role      String // read, write, admin
+}
+
+model CloudProvider {
+  id          String   @id @default(uuid())
+  name        String   // AWS, Azure, GCP
+  resources   Resource[]
+  createdAt   DateTime @default(now())
+  regions     CloudRegion[]
+  credentials CloudCredential[]
+}
+
+model Resource {
+  id             String         @id @default(uuid())
+  cloudProviderId String
+  cloudProvider   CloudProvider @relation(fields: [cloudProviderId], references: [id])
+  type           String         // e.g., VM, Storage, Database
+  configuration  Json           // JSON object to store resource-specific configurations
+  status         String         @default("active")
+  createdAt      DateTime       @default(now())
+  monitorings    Monitoring[]   @relation("ResourceMonitorings")
+}
+
+model Deployment {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  version   String   // Version of the deployment
+  status    String   @default("in_progress") // in_progress, success, failed
+  logs      Log[]
+  createdAt DateTime @default(now())
+}
+
+model Monitoring {
+  id         String   @id @default(uuid())
+  resourceId String
+  resource   Resource  @relation("ResourceMonitorings", fields: [resourceId], references: [id])
+  metrics    Json      // JSON object to store monitoring metrics
+  createdAt  DateTime  @default(now())
+  metric     Metric[]  @relation("MonitoringMetrics")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id])
+  name        String
+  status      String   @default("pending") // pending, running, completed
+  createdAt   DateTime @default(now())
+  jobs        Job[]
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  taskId      String
+  task        Task     @relation(fields: [taskId], references: [id])
+  type        String   // e.g., AI optimization, resource provisioning
+  status      String   @default("queued") // queued, running, completed, failed
+  result      Json?
+  createdAt   DateTime @default(now())
+}
+
+model CloudRegion {
+  id          String   @id @default(uuid())
+  providerId  String
+  provider    CloudProvider @relation(fields: [providerId], references: [id])
+  name        String   // e.g., us-east-1, europe-west1
+  createdAt   DateTime @default(now())
+}
+
+model CloudCredential {
+  id          String   @id @default(uuid())
+  providerId  String
+  provider    CloudProvider @relation(fields: [providerId], references: [id])
+  key         String
+  secret      String
+  createdAt   DateTime @default(now())
+}
+
+model Metric {
+  id          String   @id @default(uuid())
+  monitoringId String
+  monitoring   Monitoring @relation("MonitoringMetrics", fields: [monitoringId], references: [id])
+  name        String
+  value       Float
+  timestamp   DateTime @default(now())
+}
+
+model CICDPipeline {
+  id          String   @id @default(uuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  status      String   @default("pending") // pending, running, completed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AIOptimization {
+  id          String   @id @default(uuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  parameters  Json
+  result      Json?
+  status      String   @default("queued") // queued, running, completed, failed
+  createdAt   DateTime @default(now())
+}
+
+model CloudIntegration {
+  id          String   @id @default(uuid())
+  provider    String   // AWS, Azure, GCP
+  credentials Json
+  regions     Json
+  createdAt   DateTime @default(now())
+}
