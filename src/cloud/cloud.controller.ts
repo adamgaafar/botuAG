@@ -27,9 +27,8 @@ export class CloudController {
     @UploadedFile() file: Express.Multer.File, // Use Express.Multer.File type
     @Body('repoLink') repoLink: string,
     @Body('cloudProvider') cloudProvider: string,
-    @Body('requirements') requirements: string,
   ) {
-    return this.cloudService.deploy(file, repoLink, cloudProvider, requirements);
+    return this.cloudService.deploy(file, repoLink, cloudProvider);
   }
 
   @Post('deploy/upload')
@@ -41,5 +40,10 @@ export class CloudController {
   @Post('deploy/github')
   async deployFromGitHub(@Body('repoUrl') repoUrl: string) {
     return this.cloudService.deployFromGitHub(repoUrl);
+  }
+
+  @Get('deployments')
+  async getDeployments() {
+    return this.cloudService.getDeployments();
   }
 }

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe, Logger } from '@nestjs/common'; // Import Logger
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 function validateEnvVariables() {
   const requiredVars = ['DATABASE_URL', 'JWT_SECRET', 'OPENAI_API_KEY'];
@@ -21,7 +22,7 @@ async function bootstrap() {
   app.enableCors();
 
   // Global error handling
-  app.useGlobalFilters();
+  app.useGlobalFilters(new AllExceptionsFilter()); // Add global exception filter
 
   // Enable global validation
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));

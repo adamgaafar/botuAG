@@ -7,6 +7,8 @@ function Infrastructure() {
   const [file, setFile] = useState(null);
   const [cloudProvider, setCloudProvider] = useState('aws');
   const [responseMessage, setResponseMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [deployments, setDeployments] = useState([]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -18,6 +20,8 @@ function Infrastructure() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setResponseMessage('');
     const formData = new FormData();
     if (activeTab === 'github' && repoLink) {
       formData.append('repoLink', repoLink);
@@ -25,6 +29,7 @@ function Infrastructure() {
       formData.append('file', file);
     } else {
       setResponseMessage('Please provide the required input.');
+      setLoading(false);
       return;
     }
     formData.append('cloudProvider', cloudProvider);
@@ -36,6 +41,17 @@ function Infrastructure() {
       setResponseMessage(response.data.message);
     } catch (error) {
       setResponseMessage('Deployment failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchDeployments = async () => {
+    try {
+      const response = await api.get('/cloud/deployments');
+      setDeployments(response.data);
+    } catch (error) {
+      console.error('Failed to fetch deployments:', error);
     }
   };
 
@@ -96,9 +112,22 @@ function Infrastructure() {
             <option value="all">All</option>
           </select>
         </label>
-        <button type="submit">Deploy</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Deploying...' : 'Deploy'}
+        </button>
       </form>
       {responseMessage && <p>{responseMessage}</p>}
+      <div>
+        <h2>Deployment Status</h2>
+        <button onClick={fetchDeployments}>Refresh Deployments</button>
+        <ul>
+          {deployments.map((deployment) => (
+            <li key={deployment.id}>
+              <strong>{deployment.name}</strong>: {deployment.status}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

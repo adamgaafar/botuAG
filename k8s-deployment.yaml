@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: botu-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: botu-platform
+  template:
+    metadata:
+      labels:
+        app: botu-platform
+    spec:
+      containers:
+        - name: botu-platform
+          image: botu-platform:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: botu-env
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: botu-platform-service
+spec:
+  selector:
+    app: botu-platform
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer

@@ -7,8 +7,13 @@ function CICD() {
 
   const handleGeneratePipeline = async (e) => {
     e.preventDefault();
-    const response = await generatePipelineConfig(repositoryUrl);
-    setPipelineConfig(response.data.config);
+    setPipelineConfig('');
+    try {
+      const response = await generatePipelineConfig(repositoryUrl);
+      setPipelineConfig(response.data.config || 'No configuration generated.');
+    } catch (error) {
+      alert(`Error generating pipeline: ${error.response?.data?.message || error.message}`);
+    }
   };
 
   return (

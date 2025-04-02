@@ -19,3 +19,17 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 });
+
+describe('AuthService Integration', () => {
+  it('should sign up and log in a user', async () => {
+    const email = 'test@example.com';
+    const password = 'password';
+    const role = 'user';
+
+    const signupResult = await service.signUp(email, password, role);
+    expect(signupResult).toHaveProperty('access_token');
+
+    const loginResult = await service.login({ email, password });
+    expect(loginResult).toHaveProperty('access_token');
+  });
+});

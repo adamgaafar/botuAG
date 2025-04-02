@@ -11,4 +11,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"] # Ensure this runs the production build
+CMD ["node", "dist/main.js"]
