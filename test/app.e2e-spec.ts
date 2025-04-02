@@ -21,4 +21,19 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect({ message: 'eshta8al World!' });
   });
+
+  it('/auth/signup (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ email: 'test@example.com', password: 'password', role: 'user' });
+    expect(response.status).toBe(201);
+  });
+
+  it('/auth/login (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'test@example.com', password: 'password' });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('access_token');
+  });
 });

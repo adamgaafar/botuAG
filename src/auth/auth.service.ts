@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
+import * as sanitizeHtml from 'sanitize-html';
 
 @Injectable()
 export class AuthService {
@@ -13,12 +14,15 @@ export class AuthService {
 
   // Sign up method to create a new user
   async signUp(email: string, password: string, role: string) {
+    email = sanitizeHtml(email);
+    role = sanitizeHtml(role);
     const existingUser = await this.userService.findUserByEmail(email);
     if (existingUser) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
 
-    const newUser = await this.userService.createUser(email, password, role);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await this.userService.createUser(email, hashedPassword, role);
     const payload = { email: newUser.email, sub: newUser.id };
     const token = this.jwtService.sign(payload);
 
@@ -27,6 +31,7 @@ export class AuthService {
 
   // Login method with improved error handling
   async login(loginDto: LoginDto) {
+    loginDto.email = sanitizeHtml(loginDto.email);
     const { email, password } = loginDto;
     const user = await this.userService.findByEmail(email);
 

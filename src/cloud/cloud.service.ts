@@ -89,18 +89,23 @@ export class CloudService {
     }
 
     const deploymentTasks: Promise<void>[] = [];
-    if (cloudProvider === 'aws' || cloudProvider === 'all') {
-      deploymentTasks.push(this.deployToAWS(file, repoLink, requirements));
-    }
-    if (cloudProvider === 'azure' || cloudProvider === 'all') {
-      deploymentTasks.push(this.deployToAzure(file, repoLink, requirements));
-    }
-    if (cloudProvider === 'gcp' || cloudProvider === 'all') {
-      deploymentTasks.push(this.deployToGCP(file, repoLink, requirements));
-    }
+    try {
+      if (cloudProvider === 'aws' || cloudProvider === 'all') {
+        deploymentTasks.push(this.deployToAWS(file, repoLink, requirements));
+      }
+      if (cloudProvider === 'azure' || cloudProvider === 'all') {
+        deploymentTasks.push(this.deployToAzure(file, repoLink, requirements));
+      }
+      if (cloudProvider === 'gcp' || cloudProvider === 'all') {
+        deploymentTasks.push(this.deployToGCP(file, repoLink, requirements));
+      }
 
-    await Promise.all(deploymentTasks);
-    return { message: 'Deployment initiated successfully' };
+      await Promise.all(deploymentTasks);
+      return { message: 'Deployment initiated successfully' };
+    } catch (error) {
+      console.error('Deployment error:', error.message);
+      throw new HttpException('Deployment failed. Please check the logs.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   private async deployToAWS(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
