@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import api from '../api';
 
 function Dashboard() {
+  const [deployments, setDeployments] = useState([
+    { id: '1', name: 'Deployment 1', status: 'success', timestamp: '2025-04-01 10:00:00' },
+    { id: '2', name: 'Deployment 2', status: 'in_progress', timestamp: '2025-04-01 11:00:00' },
+    { id: '3', name: 'Deployment 3', status: 'failed', timestamp: '2025-04-01 12:00:00' },
+  ]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_BACKEND_URL);
+    socket.on('deploymentUpdate', (update) => {
+      setDeployments((prev) =>
+        prev.map((d) => (d.id === update.id ? { ...d, status: update.status } : d)),
+      );
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
   return (
     <div className="dashboard-container">
       <header>
@@ -81,12 +101,27 @@ function Dashboard() {
       <section>
         <h3>Key Highlights</h3>
         <ul className="highlights">
-          <li>✅ End-to-end automation with AI</li>
-          <li>✅ Zero-touch deployments & self-healing</li>
-          <li>✅ Unified security, cost, and compliance</li>
-          <li>✅ Natural language DevOps (ChatOps)</li>
-          <li>✅ Multi-cloud/hybrid simplicity</li>
+          <li> End-to-end automation with AI</li>
+          <li> Zero-touch deployments & self-healing</li>
+          <li> Unified security, cost, and compliance</li>
+          <li> Natural language DevOps (ChatOps)</li>
+          <li> Multi-cloud/hybrid simplicity</li>
         </ul>
+      </section>
+
+      <section>
+        <h3>Deployment Statuses</h3>
+        {error ? (
+          <p>{error}</p>
+        ) : (
+          <ul>
+            {deployments.map((deployment) => (
+              <li key={deployment.id}>
+                <strong>{deployment.name}</strong>: {deployment.status} (Last updated: {deployment.timestamp})
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );

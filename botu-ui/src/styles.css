@@ -1,18 +1,27 @@
+html, body {
+  height: 100%; /* Ensure the body and html take up the full height */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent double scrollbars */
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: linear-gradient(135deg, #1e90ff, #87cefa); /* Cool blue background */
-  color: #333;
+  background: linear-gradient(135deg, #0a3d62, #1e90ff); /* Darker blue background */
+  color: white; /* White text for better contrast */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  min-height: 100vh; /* Full viewport height */
+  padding-top: 70px; /* Add padding to avoid overlap with the navbar */
+  padding-bottom: 50px; /* Add padding to avoid overlap with the footer */
 }
 
 nav {
-  background-color: #1e90ff; /* Blue navbar */
-  padding: 10px 20px;
+  background-color: #0a3d62; /* Darker blue navbar */
+  padding: 20px 20px;
   position: fixed; /* Fix the navbar at the top */
   top: 0; /* Align it to the top */
   left: 0; /* Start from the left edge */
@@ -47,6 +56,11 @@ nav ul li a:hover {
 
 form {
   margin: 20px 0;
+  background-color: #0a3d62;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 form label {
@@ -54,27 +68,42 @@ form label {
   margin-bottom: 5px;
   font-weight: bold;
   text-align: left; /* Align label text to the start of the input field */
+  color: white;
 }
 
 form input, form select, form textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 4px;
+  background-color: #1e90ff;
+  color: white;
+}
+
+form input::placeholder, form textarea::placeholder {
+  color: #e0e0e0;
 }
 
 form button {
   padding: 10px 20px;
-  background-color: #1e90ff;
+  background-color: #00d4ff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 form button:hover {
-  background-color: #005cbf;
+  background-color: #00a3cc;
+}
+
+form p {
+  color: #ff4d4d;
+  font-weight: bold;
+  text-align: center;
 }
 
 .auth-container, .dashboard-container {
@@ -130,10 +159,10 @@ form button:hover {
 }
 
 .dashboard-container {
-  margin-top: 70px; /* Add margin to avoid overlap with the fixed navbar */
-  margin-bottom: 50px; /* Add margin to avoid overlap with the fixed footer */
+  margin-top: 0; /* Ensure no space under the navbar */
+  padding-top: 0; /* Remove extra padding */
+  height: 100vh; /* Adjust height to account for navbar */
   width: 100vw; /* Take the full width of the viewport */
-  height: calc(100vh - 120px); /* Fill the space between navbar and footer */
   padding: 20px; /* Add padding for better readability */
   background: white; /* Ensure the background is white */
   box-sizing: border-box; /* Include padding in the width and height calculation */
@@ -141,6 +170,7 @@ form button:hover {
   border-radius: 0; /* Remove border radius to make it span edge-to-edge */
   box-shadow: none; /* Remove shadow for a flat design */
   text-align: left; /* Align text to the left */
+  padding-bottom: 120px; /* Add padding to account for the footer height */
 }
 
 .dashboard-container header {
@@ -204,10 +234,15 @@ form button:hover {
 }
 
 footer {
-  background-color: #1e90ff;
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  align-items: center;
+  background-color: #1b558f;
   color: white;
   text-align: center;
-  padding: 10px 0;
+  height: 20px;
+  padding: 5px 0;
   position: fixed;
   bottom: 0;
   left: 0; /* Ensure the footer starts from the left edge */
@@ -290,4 +325,46 @@ footer a:hover {
   .nav-menu {
     display: none; /* Hide default menu in mobile view */
   }
+}
+
+p, label {
+  color: black; /* Make text visible */
+}
+
+h1, h2, h3, h4, h5, h6, p, ul, li, a {
+  color: black; /* Ensure text is visible */
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background-color: #1e90ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.tabs button.active {
+  background-color: #005cbf;
+}
+
+.tabs button:hover {
+  background-color: #0073e6;
+}
+
+h1 {
+  color: white; /* Default white title for all pages */
+}
+
+.dashboard-container h1 {
+  color: #1e90ff; /* Blue title specifically for the dashboard */
 }

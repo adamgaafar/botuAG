@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import api from '../api';
 
 function Infrastructure() {
-  const [requirements, setRequirements] = useState('');
-  const [file, setFile] = useState(null);
+  const [activeTab, setActiveTab] = useState('github'); // 'github' or 'zip'
   const [repoLink, setRepoLink] = useState('');
+  const [file, setFile] = useState(null);
   const [cloudProvider, setCloudProvider] = useState('aws');
   const [responseMessage, setResponseMessage] = useState('');
 
@@ -12,12 +12,21 @@ function Infrastructure() {
     setFile(e.target.files[0]);
   };
 
+  const handleRepoLinkChange = (e) => {
+    setRepoLink(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('requirements', requirements);
-    formData.append('file', file);
-    formData.append('repoLink', repoLink);
+    if (activeTab === 'github' && repoLink) {
+      formData.append('repoLink', repoLink);
+    } else if (activeTab === 'zip' && file) {
+      formData.append('file', file);
+    } else {
+      setResponseMessage('Please provide the required input.');
+      return;
+    }
     formData.append('cloudProvider', cloudProvider);
 
     try {
@@ -33,28 +42,48 @@ function Infrastructure() {
   return (
     <div>
       <h1>Infrastructure Deployment</h1>
+      <div className="tabs">
+        <button
+          className={activeTab === 'github' ? 'active' : ''}
+          onClick={() => setActiveTab('github')}
+        >
+          Deploy GitHub Repo
+        </button>
+        <button
+          className={activeTab === 'zip' ? 'active' : ''}
+          onClick={() => setActiveTab('zip')}
+        >
+          Deploy ZIP File
+        </button>
+      </div>
       <form onSubmit={handleSubmit}>
-        <label>
-          Deployment Requirements:
-          <textarea
-            value={requirements}
-            onChange={(e) => setRequirements(e.target.value)}
-            placeholder="Enter requirements..."
-          />
-        </label>
-        <label>
-          Upload ZIP File:
-          <input type="file" accept=".zip" onChange={handleFileChange} />
-        </label>
-        <label>
-          Repository Link:
-          <input
-            type="text"
-            value={repoLink}
-            onChange={(e) => setRepoLink(e.target.value)}
-            placeholder="Enter repository link..."
-          />
-        </label>
+        {activeTab === 'github' && (
+          <div>
+            <label>
+              Repository Link:
+              <input
+                type="text"
+                value={repoLink}
+                onChange={handleRepoLinkChange}
+                placeholder="Enter repository link..."
+                required
+              />
+            </label>
+          </div>
+        )}
+        {activeTab === 'zip' && (
+          <div>
+            <label>
+              Upload ZIP File:
+              <input
+                type="file"
+                accept=".zip"
+                onChange={handleFileChange}
+                required
+              />
+            </label>
+          </div>
+        )}
         <label>
           Select Cloud Provider:
           <select

@@ -6,7 +6,8 @@ import { DefaultAzureCredential } from '@azure/identity';
 import { ComputeManagementClient } from '@azure/arm-compute';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Multer } from 'multer'; // Import Multer types
+import * as unzipper from 'unzipper';
+import { simpleGit } from 'simple-git';
 
 @Injectable()
 export class CloudService {
@@ -32,10 +33,11 @@ export class CloudService {
     }
 
     const ec2 = new AWS.EC2({
-      accessKeyId: accessKeyId ?? '', // Provide a fallback or ensure it's a string
-      secretAccessKey: secretAccessKey ?? '',
-      region: region ?? '',
+      accessKeyId,
+      secretAccessKey,
+      region,
     });
+
     return ec2.runInstances(resourceConfig).promise();
   }
 
@@ -49,6 +51,7 @@ export class CloudService {
       credentials: JSON.parse(credentials),
       scopes: ['https://www.googleapis.com/auth/cloud-platform'],
     });
+
     const compute = google.compute({ version: 'v1', auth });
     return compute.instances.insert(resourceConfig);
   }
@@ -73,7 +76,7 @@ export class CloudService {
   }
 
   async deploy(
-    file: Express.Multer.File, // Use Express.Multer.File type
+    file: Express.Multer.File,
     repoLink: string,
     cloudProvider: string,
     requirements: string,
@@ -85,7 +88,7 @@ export class CloudService {
       );
     }
 
-    const deploymentTasks: Promise<void>[] = []; // Ensure correct typing
+    const deploymentTasks: Promise<void>[] = [];
     if (cloudProvider === 'aws' || cloudProvider === 'all') {
       deploymentTasks.push(this.deployToAWS(file, repoLink, requirements));
     }
@@ -101,17 +104,49 @@ export class CloudService {
   }
 
   private async deployToAWS(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
-    // AWS deployment logic
     console.log('Deploying to AWS with:', { file, repoLink, requirements });
   }
 
   private async deployToAzure(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
-    // Azure deployment logic
     console.log('Deploying to Azure with:', { file, repoLink, requirements });
   }
 
   private async deployToGCP(file: Express.Multer.File, repoLink: string, requirements: string): Promise<void> {
-    // GCP deployment logic
     console.log('Deploying to GCP with:', { file, repoLink, requirements });
+  }
+
+  async deployFromZip(file: Express.Multer.File): Promise<any> {
+    if (!file) {
+      throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST);
+    }
+
+    const uploadPath = path.join(__dirname, '../../uploads', file.filename);
+    const extractPath = path.join(__dirname, '../../extracted', file.filename);
+
+    fs.writeFileSync(uploadPath, file.buffer);
+
+    await fs
+      .createReadStream(uploadPath)
+      .pipe(unzipper.Extract({ path: extractPath }))
+      .promise();
+
+    fs.unlinkSync(uploadPath);
+
+    console.log(`Deploying files from ${extractPath}`);
+    return { message: 'Deployment from ZIP initiated successfully' };
+  }
+
+  async deployFromGitHub(repoUrl: string): Promise<any> {
+    if (!repoUrl) {
+      throw new HttpException('Repository URL is required', HttpStatus.BAD_REQUEST);
+    }
+
+    const clonePath = path.join(__dirname, '../../cloned-repos', path.basename(repoUrl));
+
+    const git = simpleGit();
+    await git.clone(repoUrl, clonePath);
+
+    console.log(`Deploying files from ${clonePath}`);
+    return { message: 'Deployment from GitHub repository initiated successfully' };
   }
 }

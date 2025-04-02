@@ -18,4 +18,12 @@ export class AppController {
   healthCheck(): any {
     return { status: 'UP' }; // Add health check endpoint
   }
+
+  @Get('deployments')
+  getDeployments() {
+    return [
+      { id: '1', name: 'Deployment 1', status: 'success' },
+      { id: '2', name: 'Deployment 2', status: 'in_progress' },
+    ];
+  }
 }

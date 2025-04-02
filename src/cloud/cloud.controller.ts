@@ -31,4 +31,15 @@ export class CloudController {
   ) {
     return this.cloudService.deploy(file, repoLink, cloudProvider, requirements);
   }
+
+  @Post('deploy/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async deployFromZip(@UploadedFile() file: Express.Multer.File) {
+    return this.cloudService.deployFromZip(file);
+  }
+
+  @Post('deploy/github')
+  async deployFromGitHub(@Body('repoUrl') repoUrl: string) {
+    return this.cloudService.deployFromGitHub(repoUrl);
+  }
 }

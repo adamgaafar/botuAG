@@ -24,6 +24,7 @@ import { CloudService } from './cloud/cloud.service';
 import { MonitoringService } from './monitoring/monitoring.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { ResourceService } from './resource/resource.service';
+import { DeploymentGateway } from './deployment/deployment.gateway';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), UserModule, PrismaModule],
@@ -51,6 +52,7 @@ import { ResourceService } from './resource/resource.service';
     MonitoringService, // Add MonitoringService
     NotificationsService, // Add NotificationsService
     ResourceService, // Add ResourceService
+    DeploymentGateway, // Add DeploymentGateway
   ],
 })
 export class AppModule {}
