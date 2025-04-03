@@ -5,8 +5,10 @@ function Infrastructure() {
   const [activeTab, setActiveTab] = useState('github'); // 'github' or 'zip'
   const [repoLink, setRepoLink] = useState('');
   const [file, setFile] = useState(null);
-  const [cloudProvider, setCloudProvider] = useState('aws');
+  const [cloudProvider, setCloudProvider] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -14,6 +16,18 @@ function Infrastructure() {
 
   const handleRepoLinkChange = (e) => {
     setRepoLink(e.target.value);
+  };
+
+  const handleCloudProviderChange = (e) => {
+    const selectedProvider = e.target.value;
+    setCloudProvider(selectedProvider);
+
+    // Check for missing credentials
+    if (['gcp', 'aws', 'azure'].includes(selectedProvider)) {
+      setErrorMessage(`Missing credentials for ${selectedProvider.toUpperCase()}`);
+    } else {
+      setErrorMessage('');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -29,13 +43,16 @@ function Infrastructure() {
     }
     formData.append('cloudProvider', cloudProvider);
 
+    setIsLoading(true);
     try {
       const response = await api.post('/cloud/deploy', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setResponseMessage(response.data.message);
     } catch (error) {
-      setResponseMessage('Deployment failed. Please try again.');
+      setResponseMessage(error.response?.data?.message || 'Deployment failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -88,7 +105,7 @@ function Infrastructure() {
           Select Cloud Provider:
           <select
             value={cloudProvider}
-            onChange={(e) => setCloudProvider(e.target.value)}
+            onChange={handleCloudProviderChange}
           >
             <option value="aws">AWS</option>
             <option value="azure">Azure</option>
@@ -96,8 +113,12 @@ function Infrastructure() {
             <option value="all">All</option>
           </select>
         </label>
-        <button type="submit">Deploy</button>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Deploying...' : 'Deploy'}
+        </button>
       </form>
+      {isLoading && <p>Cloning repository, please wait...</p>}
       {responseMessage && <p>{responseMessage}</p>}
     </div>
   );
