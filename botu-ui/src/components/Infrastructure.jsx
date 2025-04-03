@@ -47,7 +47,7 @@ function Infrastructure() {
           className={activeTab === 'github' ? 'active' : ''}
           onClick={() => setActiveTab('github')}
         >
-          Deploy GitHub Repo
+          Deploy GitHub Repo that static
         </button>
         <button
           className={activeTab === 'zip' ? 'active' : ''}
