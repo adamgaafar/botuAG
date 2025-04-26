@@ -10,6 +10,7 @@ import CostOptimization from './components/CostOptimization';
 import DevOpsGPT from './components/DevOpsGPT';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import DeploymentPage from './components/DeploymentPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,6 +43,7 @@ function App() {
               <li><Link to="/security" onClick={() => setIsMenuOpen(false)}>Security</Link></li>
               <li><Link to="/cost-optimization" onClick={() => setIsMenuOpen(false)}>Cost Optimization</Link></li>
               <li><Link to="/devops-gpt" onClick={() => setIsMenuOpen(false)}>DevOps GPT</Link></li>
+              <li><Link to="/deployment" onClick={() => setIsMenuOpen(false)}>Deployment</Link></li>
               <li>
                 <a href="#" onClick={() => { 
                   localStorage.removeItem('token'); 
@@ -62,6 +64,7 @@ function App() {
               <Route path="/security" element={<Security />} />
               <Route path="/cost-optimization" element={<CostOptimization />} />
               <Route path="/devops-gpt" element={<DevOpsGPT />} />
+              <Route path="/deployment" element={<DeploymentPage />} />
               <Route path="*" element={<Navigate to="/" />} />
             </>
           ) : (
